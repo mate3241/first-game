@@ -9,7 +9,7 @@ const shiftPush = (array) => {
   for (let i = 0; i < array.length; i++) {
 
     array[i].shift();
-    array[i].push('.');
+    array[i].push('');
 
   }
 }
@@ -37,7 +37,8 @@ array[2][3] = '*';
 fill2DArray(array, '.');
 print2DArray(array);
 setInterval(() => {
+  console.clear();
   shiftPush(array);
   fill2DArray(array, '.');
   print2DArray(array);
-}, 1000);
+}, 2000);

@@ -3,31 +3,31 @@ stdin.setRawMode(true);
 stdin.resume();
 stdin.setEncoding('utf8');
 
-const generate2DArray = (n, m) => {
-  const arr = new Array(n);
-  for (let i = 0; i < arr.length; i++) {
-    arr[i] = new Array(m);
+const generateMatrix = (n, m) => {
+  const matrix = new Array(n);
+  for (let i = 0; i < matrix.length; i++) {
+    matrix[i] = new Array(m);
   }
-  return arr;
+  return matrix;
 };
-const shiftPush = (array) => {
-  for (let i = 0; i < array.length; i++) {
-    array[i].shift();
-    array[i].push('');
+const shiftPush = (matrix) => {
+  for (let i = 0; i < matrix.length; i++) {
+    matrix[i].shift();
+    matrix[i].push('');
   }
 }
 
-  const fill2DArray = (matrix, filler) => {
+  const fillMatrix = (matrix, filler) => {
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix[i].length; j++) {
-        if (matrix[i][j] !== '*' && matrix[i][j] !== 'p') {
+        if (matrix[i][j] !== '*' && matrix[i][j] !== 'P') {
           matrix[i][j] = filler;
         }
       }
     }
   };
 
-  const print2DArray = (matrix) => {
+  const printMatrix = (matrix) => {
     let oneLine = '';
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix[i].length; j++) {
@@ -44,11 +44,7 @@ const shiftPush = (array) => {
   }
 
   let placePlayer = (matrix, player) => {
-    matrix[player.line][0] = 'p';
-  }
-
-  let getPlayerLine = (player) => {
-    return player.line;
+    matrix[player.line][0] = 'P';
   }
 
   let movePlayer = (player, direction, matrix) => {
@@ -59,41 +55,51 @@ const shiftPush = (array) => {
     }
   }
 
-  let collision = (matrix, player) => {//hogy érnek össze?
+  let checkCollision = (matrix, player) => {//hogy érnek össze?
     for (let i = 0; i < matrix.length; i++) {
-      if (matrix[i][0] === player.line && matrix[i][0] === '*') {
+      if (matrix[i][0] === player.line && matrix[i][1] === '*') {
        //if (matrix[player.line] === '*'){
-        print2DArray(array);
+        printMatrix(matrix);
         console.log('VÉGE')
         process.exit();
       }
     }
   }
 
-  let array = generate2DArray(20, 20);
-  fill2DArray(array, '.');
-  let player = { line: 10 };
-  generateFireball(array);
-  placePlayer(array, player);
-  print2DArray(array);
+  const init = () => {
+    fillMatrix(matrix, '.');
+    generateFireball(matrix);
+    placePlayer(matrix, player);
+    printMatrix(matrix);
+  }
 
-  stdin.on('data', (key) => {
+  const keyProcessor = () => {
+    stdin.on('data', (key) => {
     if (key === 'w') {
-      movePlayer(player, 'up', array)
+      movePlayer(player, 'up', matrix)
     }
     if (key === 's') {
-      movePlayer(player, 'down', array);
+      movePlayer(player, 'down', matrix);
     }
     if (key === 'q') {
       process.exit();
     }
-  });
-  setInterval(() => {
+  });}
+
+  const loop = () => {
+    setInterval(() => {
     console.clear();
-    shiftPush(array);
-    collision(array, player);
-    placePlayer(array, player);
-    fill2DArray(array, '.');
-    generateFireball(array);
-    print2DArray(array);
-  }, 1000);
+    shiftPush(matrix);
+    checkCollision(matrix, player);
+    placePlayer(matrix, player);
+    fillMatrix(matrix, '.');
+    generateFireball(matrix);
+    printMatrix(matrix);
+  }, 1000)}
+
+  let player = { line: 10 };
+  let matrix = generateMatrix(20, 20);
+
+  init();
+  loop();
+  keyProcessor();

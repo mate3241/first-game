@@ -9,7 +9,7 @@ const shiftPush = (array) => {
   for (let i = 0; i < array.length; i++) {
 
     array[i].shift();
-    array[i].push();
+    array[i].push('.');
 
   }
 }
@@ -33,9 +33,11 @@ const print2DArray = (matrix) => {
   console.log();
 };
 let array = generate2DArray(20, 20);
-array[2][3] = '#';
+array[2][3] = '*';
+fill2DArray(array, '.');
+print2DArray(array);
 setInterval(() => {
-  print2DArray(array);
   shiftPush(array);
   fill2DArray(array, '.');
+  print2DArray(array);
 }, 1000);
